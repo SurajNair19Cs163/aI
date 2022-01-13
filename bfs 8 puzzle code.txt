@@ -1,0 +1,59 @@
+# from copy import copy;
+from copy import copy
+
+def bfs(src,target):
+    if src==target:
+        print("Target reached in 0 steps\n")
+        return
+    queue = []
+    exp=[]
+    val=0
+    queue.append(src)
+    while len(queue)>0:
+        next=queue.pop(0)
+        exp.append(next)
+        print(next)
+        if next==target:
+            print("Target reached in "+str(val)+" steps")
+            return
+        possible=[]
+        possible=gameRule(exp,next)
+        val+=1
+        for state in possible:
+            if state not in queue and state not in exp:
+                queue.append(state)
+    print("State not possible. States searched = "+str(val))
+def gameRule(expr,src):
+    b=src.index(-1)
+    possible_moves=[]
+    if b not in [0,1,2]:
+        possible_moves.append('U')
+    if b not in [6,7,8]:
+        possible_moves.append('D')
+    if b not in [0,3,6]:
+        possible_moves.append('L')
+    if b not in [2,5,8]:
+        possible_moves.append('R')
+    
+    states=[]
+    for i in possible_moves:
+        state=genState(src,i,b)
+        states.append(state)
+    return [state for state in states if state not in expr]
+
+def genState(src,move,b):
+    temp = src.copy()
+    if move=='D':
+        temp[b+3],temp[b]=temp[b],temp[b+3]
+    if move=='U':
+        temp[b-3],temp[b]=temp[b],temp[b-3]
+    if move=='L':
+        temp[b-1],temp[b]=temp[b],temp[b-1]
+    if move=='R':
+        temp[b+1],temp[b]=temp[b],temp[b+1]
+    return temp
+src=[1,-1,3,4,2,5,7,8,6]
+target=[1,2,3,4,5,6,7,8,-1]
+print("src: "+str(src))
+print("target: "+str(target)+"\n")
+bfs(src,target)
